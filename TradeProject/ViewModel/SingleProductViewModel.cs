@@ -211,12 +211,20 @@ namespace TradeProject.ViewModel
         {
             get => new CommonCommand(() =>
             {
-                BitmapImage pic = _model.SetPicture();
-                if (pic != null)
+                try
                 {
-                    ImageSource = pic;
-                    PictureChanged = true;
+                    BitmapImage pic = _model.SetPicture();
+                    if (pic != null)
+                    {
+                        ImageSource = pic;
+                        PictureChanged = true;
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Message?.Invoke(ex.Message);
+                }
+                
             });
         }
     }
