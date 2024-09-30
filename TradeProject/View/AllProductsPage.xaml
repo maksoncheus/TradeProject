@@ -1,0 +1,102 @@
+﻿<Window x:Class="TradeProject.View.AllProductsPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TradeProject.View"
+        xmlns:vm="clr-namespace:TradeProject.ViewModel"
+        xmlns:model="clr-namespace:TradeProject.Model"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        Title="AllProductsPage" Height="450" Width="800">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.Setters>
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger.Setters>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Window.DataContext>
+        <vm:AllProductsPageViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.25*"/>
+            <RowDefinition Height="0.75*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <ComboBox Margin="15, 0, 15, 0" Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Manufacturers}" SelectedIndex="{Binding ManufacturerSelectedIndex}" SelectedValue="{Binding ManufacturerSelectedName}"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Margin="15, 0, 0, 0">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="Показано {0} из {1}">
+                        <Binding Path="CurrentShowedProducts"/>
+                        <Binding Path="TotalProducts"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            <ComboBox Margin="15, 0, 15, 0" Grid.Column="1" Grid.Row="1" SelectedIndex="{Binding CostSortingIndex}">
+                <ComboBoxItem Content="Не сортировать"/>
+                <ComboBoxItem Content="По возрастанию цены"/>
+                <ComboBoxItem Content="По убыванию убыванию"/>
+            </ComboBox>
+            <Button Content="Добавить товар" Grid.Column="1" Grid.Row="2" HorizontalContentAlignment="Center" HorizontalAlignment="Center"  Margin="5" Command="{Binding OpenAddProductPage}"/>
+            <TextBox Margin="15, 0, 15, 0" Grid.Column="2" Grid.Row="1" Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical">
+                <ItemsControl Margin="100, 0, 100, 0" ItemsSource="{Binding ProductCollection}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button HorizontalAlignment="Center" Margin="10" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.OpenProductPage}" CommandParameter="{Binding}">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Background" Value="LightSteelBlue"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding QuantityInStock}" Value="0">
+                                                <Setter Property="Background" Value="LightGray"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <local:ProductControl Product="{Binding}"/>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <ItemsControl Margin="50, 0, 50, 0" ItemsSource="{Binding Pages}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Width="25" Height="25" Margin="5" Content="{Binding Path=PageNumber}"
+                                    IsEnabled="{Binding Path=IsUnChecked}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.ChangePage}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Content}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

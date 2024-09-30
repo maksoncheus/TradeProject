@@ -1,0 +1,209 @@
+﻿<Window x:Class="TradeProject.View.SingleProductView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TradeProject.View"
+        xmlns:vm="clr-namespace:TradeProject.ViewModel"
+xmlns:model="clr-namespace:TradeProject.Model"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        Title="SingleProductView" Height="800" Width="800">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <model:ImageConverter x:Key="ImageConverter"/>
+        <model:CutOffConverterDecimal x:Key="CutOffConverterDecimal" Cutoff="0"/>
+        <model:CutOffConverterInteger x:Key="CutOffConverterInteger" Cutoff="0"/>
+        <Style TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TextBox">
+                                <Border Background="Transparent" BorderBrush="Transparent" BorderThickness="1">
+                                    <TextBlock Text="{TemplateBinding Text}" Padding="2" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.4*"/>
+            <ColumnDefinition Width="0.6*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="0.4*"/>
+            <RowDefinition Height="0.3*"/>
+            <RowDefinition Height="0.15*"/>
+        </Grid.RowDefinitions>
+        <Border Margin="5" Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="1">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Название:"/>
+                <TextBox Name="NameTextBox" BorderBrush="Transparent" FontSize="18" Text="{Binding CurrentProduct.Name}" Grid.Row="0" Grid.ColumnSpan="2" Margin="5" IsEnabled="{Binding CanEdit}" Height="80"/>
+            </StackPanel>
+        </Border>
+        <Border Margin="15" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="1">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Описание:"/>
+                <TextBox Name="DescriptionTextBox" TextWrapping="Wrap" AcceptsReturn="True" BorderBrush="Transparent" FontSize="16" Text="{Binding CurrentProduct.Description}" Margin="5" IsEnabled="{Binding CanEdit}"/>
+            </StackPanel>
+        </Border>
+        <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Vertical">
+            <Border Margin="3" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="1">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Производитель:"/>
+                    <TextBox Name="ManufacturerTextBox" TextWrapping="Wrap" AcceptsReturn="True" BorderBrush="Transparent" FontSize="16" Text="{Binding CurrentProduct.Manufacturer}" Margin="5" IsEnabled="{Binding CanEdit}"/>
+                </StackPanel>
+            </Border>
+            <Border Margin="3" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="1">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Стоимость за единицу товара:"/>
+                    <TextBox Name="CostTextBox" TextWrapping="Wrap" AcceptsReturn="True" BorderBrush="Transparent" FontSize="16" Text="{Binding CurrentProduct.Cost}" Margin="5" IsEnabled="{Binding CanEdit}"/>
+                </StackPanel>
+            </Border>
+            <Border Margin="3" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="1">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Количество на складе:"/>
+                    <TextBox Name="QuantityTextBox" TextWrapping="Wrap" AcceptsReturn="True" BorderBrush="Transparent" FontSize="16" Text="{Binding CurrentProduct.QuantityInStock}" Margin="5" IsEnabled="{Binding CanEdit}"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+        <Button Content="ОК" Margin="120,40,120,40" Grid.Column="2" Grid.Row="3" Command="{Binding SaveChanges}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <i:CallMethodAction MethodName="Close"
+                           TargetObject="{Binding RelativeSource={RelativeSource
+                                                  Mode=FindAncestor,
+                                                  AncestorType=Window}}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="IsEnabled" Value="True"/>
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Path=Text.Length, ElementName=NameTextBox}" Value="0"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Path=Text.Length, ElementName=DescriptionTextBox}" Value="0"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Path=Text.Length, ElementName=ManufacturerTextBox}" Value="0"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </MultiDataTrigger>
+
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Path=Text.Length, ElementName=CostTextBox}" Value="0"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </MultiDataTrigger>
+
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Path=Text, ElementName=CostTextBox, Converter={StaticResource CutOffConverterDecimal}}" Value="false"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Path=Text.Length, ElementName=ArticleTextBox}" Value="0"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Path=Text.Length, ElementName=QuantityTextBox}" Value="0"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </MultiDataTrigger>
+
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Path=Text, ElementName=QuantityTextBox, Converter={StaticResource CutOffConverterInteger}}" Value="false"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Path=SelectedIndex, ElementName=CategoryCombo}" Value="-1"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Path=CategoryText, UpdateSourceTrigger=PropertyChanged}" Value=""/>
+                                <Condition Binding="{Binding Path=IsCategoryTextVisible}" Value="True"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        <Border Margin="15" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Фотография:"/>
+                <Grid>
+                    <Image Stretch="Fill">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Setter Property="Source" Value="{Binding CurrentProduct.Photo, Converter={StaticResource ImageConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding PictureChanged}" Value="true">
+                                        <Setter Property="Source" Value="{Binding ImageSource, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <Button Background="Transparent" Opacity="0.25" Command="{Binding ChangeProductPicture}"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.1*"/>
+                <ColumnDefinition Width="0.8*"/>
+                <ColumnDefinition Width="0.1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <ComboBox Name="CategoryCombo" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="0" Grid.Column="1"
+                      ItemsSource="{Binding Categories}" SelectedIndex="{Binding SelectedCategory}"/>
+            <TextBox Name="CategoryText" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Visibility="{Binding IsCategoryTextVisible, Converter={StaticResource BoolToVis}}" Grid.Row="0" Grid.Column="1" Text="{Binding CategoryText}"/>
+            <Border Margin="3" Grid.Column="1" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Артикул товара:"/>
+                    <TextBox Name="ArticleTextBox" TextWrapping="Wrap" AcceptsReturn="True" BorderBrush="Transparent" FontSize="16" Text="{Binding CurrentProduct.ArticleNumber}" Margin="5" IsEnabled="{Binding CanEdit}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+        <Button Grid.Row="3" Margin="25" Command="{Binding RemoveProduct}" Content="Удалить товар" Visibility="{Binding Visibility}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <i:CallMethodAction MethodName="Close"
+               TargetObject="{Binding RelativeSource={RelativeSource
+                                      Mode=FindAncestor,
+                                      AncestorType=Window}}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+    </Grid>
+</Window>
