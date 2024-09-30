@@ -42,8 +42,8 @@ namespace TradeProject.Model
             }
             return null;
         }
-        public bool IsPathInResources(Uri path) => path.ToString().Replace("file:///", "").Replace('/', '\\') == _pathToRes + Path.GetFileName(path.ToString());
-        public void DeleteOldImage(string path) => File.Delete(Path.GetFullPath("res\\") + path);
-        public void CopyImageToResources(string initPath) => File.Copy(@initPath.Replace("file:///", ""), _pathToRes + Path.GetFileName(initPath));
+        public bool IsPathInResources(Uri path) => path.ToString().Replace("file://", "").Replace('/', '\\') == _pathToRes + Path.GetFileName(path.ToString());
+        public void DeleteOldImage(string path) => File.Delete(_pathToRes + path);
+        public void CopyImageToResources(string initPath) => File.Copy(@initPath.Replace("file://", ""), _pathToRes + Path.GetFileName(initPath));
     }
 }

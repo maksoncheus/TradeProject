@@ -181,7 +181,7 @@ namespace TradeProject.ViewModel
                     if (PictureChanged)
                     {
                         if (!_model.IsPathInResources(ImageSource.UriSource))
-                            _model.CopyImageToResources(ImageSource.UriSource.ToString());
+                            _model.CopyImageToResources(ImageSource.UriSource.LocalPath);
                         pr.Photo = Path.GetFileName(ImageSource.UriSource.ToString());
                     }
                 }
